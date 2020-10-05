@@ -18,7 +18,7 @@ func main(){
 		})
 		apiR.GET("/streams", GetStreams)
 	}
-	_ = r.Run(":8888")
+	_ = r.Run(":8899")
 }
 
 func GetStreams(context *gin.Context){
