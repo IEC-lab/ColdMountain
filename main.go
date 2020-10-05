@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ColdMountain/graphql/adaptation"
 	"ColdMountain/middlewares"
 	"ColdMountain/streams"
 	"github.com/gin-gonic/gin"
@@ -17,6 +18,8 @@ func main(){
 			})
 		})
 		apiR.GET("/streams", GetStreams)
+		apiR.GET("/graphql/playground", adaptation.PlaygroundHandler())
+		apiR.POST("/graphql/query", adaptation.GraphqlHandler())
 	}
 	_ = r.Run(":8899")
 }
