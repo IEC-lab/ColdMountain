@@ -42,12 +42,12 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Query struct {
-		GetFrameStreams func(childComplexity int) int
+		FrameStreams func(childComplexity int) int
 	}
 }
 
 type QueryResolver interface {
-	GetFrameStreams(ctx context.Context) ([]string, error)
+	FrameStreams(ctx context.Context) ([]string, error)
 }
 
 type executableSchema struct {
@@ -65,12 +65,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "Query.getFrameStreams":
-		if e.complexity.Query.GetFrameStreams == nil {
+	case "Query.frameStreams":
+		if e.complexity.Query.FrameStreams == nil {
 			break
 		}
 
-		return e.complexity.Query.GetFrameStreams(childComplexity), true
+		return e.complexity.Query.FrameStreams(childComplexity), true
 
 	}
 	return 0, false
@@ -123,7 +123,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "graph/schema.graphqls", Input: `type Query {
-  getFrameStreams: [String!]!
+  frameStreams: [String!]!
 }
 
 #type Mutation {
@@ -189,7 +189,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Query_getFrameStreams(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_frameStreams(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -207,7 +207,7 @@ func (ec *executionContext) _Query_getFrameStreams(ctx context.Context, field gr
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetFrameStreams(rctx)
+		return ec.resolvers.Query().FrameStreams(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1405,7 +1405,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "getFrameStreams":
+		case "frameStreams":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -1413,7 +1413,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_getFrameStreams(ctx, field)
+				res = ec._Query_frameStreams(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}

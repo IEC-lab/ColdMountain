@@ -1,5 +1,5 @@
 type Query {
-  getFrameStreams: [String!]!
+  frameStreams: [String!]!
 }
 
 #type Mutation {
