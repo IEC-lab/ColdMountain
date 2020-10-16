@@ -8,19 +8,18 @@ import (
 )
 
 func DiscoverStreams() []*model2.FrameStream {
-	var ret = []*model2.FrameStream{}
-	if RTSPResources, err := GetRTSPResources(); err != nil{
-		return ret
-	}else {
-		for _, RTSPResource := range RTSPResources{
-			temp := model2.FrameStream{
-				ID:           &RTSPResource.ID,
-				URL:          &RTSPResource.URL,
-				Position:     &RTSPResource.Position,
-				AlgModel:     &RTSPResource.AlgModel,
-				EncodeNeeded: &RTSPResource.EncodeNeeded,
+	if RTSPResources, err := GetRTSPResources(); err != nil {
+		return []*model2.FrameStream{}
+	} else {
+		var ret = make([]*model2.FrameStream, len(RTSPResources))
+		for i := 0; i < len(RTSPResources); i++ {
+			ret[i] = &model2.FrameStream{
+				ID:           &RTSPResources[i].ID,
+				URL:          &RTSPResources[i].URL,
+				Position:     &RTSPResources[i].Position,
+				AlgModel:     &RTSPResources[i].AlgModel,
+				EncodeNeeded: &RTSPResources[i].EncodeNeeded,
 			}
-			ret = append(ret, &temp)
 		}
 		return ret
 	}
@@ -29,7 +28,7 @@ func DiscoverStreams() []*model2.FrameStream {
 func GetRTSPResources() ([]model.RTSPResource, error) {
 	RTSPResourceDBClient := connection.GetRTSPResourceDBClient()
 	RTSPResources := []model.RTSPResource{}
-	if dbErr := RTSPResourceDBClient.Find(&RTSPResources).Error; dbErr != nil{
+	if dbErr := RTSPResourceDBClient.Find(&RTSPResources).Error; dbErr != nil {
 		log.Printf("dberr: %+v", dbErr)
 		return nil, dbErr
 	}
