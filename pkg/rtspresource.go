@@ -2,17 +2,25 @@ package pkg
 
 import (
 	"ColdMountain/connection"
+	model2 "ColdMountain/graphql/graph/model"
 	"ColdMountain/model"
 	"log"
 )
 
-func DiscoverStreams() []string {
+func DiscoverStreams() []*model2.FrameStream {
+	var ret = []*model2.FrameStream{}
 	if RTSPResources, err := GetRTSPResources(); err != nil{
-		return []string{}
+		return ret
 	}else {
-		var ret = []string{}
 		for _, RTSPResource := range RTSPResources{
-			ret = append(ret, RTSPResource.URL)
+			temp := model2.FrameStream{
+				ID:           &RTSPResource.ID,
+				URL:          &RTSPResource.URL,
+				Position:     &RTSPResource.Position,
+				AlgModel:     &RTSPResource.AlgModel,
+				EncodeNeeded: &RTSPResource.EncodeNeeded,
+			}
+			ret = append(ret, &temp)
 		}
 		return ret
 	}

@@ -5,11 +5,12 @@ package graph
 
 import (
 	"ColdMountain/graphql/graph/generated"
+	"ColdMountain/graphql/graph/model"
 	"ColdMountain/pkg"
 	"context"
 )
 
-func (r *queryResolver) FrameStreams(ctx context.Context) ([]string, error) {
+func (r *queryResolver) FrameStreams(ctx context.Context) ([]*model.FrameStream, error) {
 	return pkg.DiscoverStreams(), nil
 }
 

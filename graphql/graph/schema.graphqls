@@ -1,5 +1,13 @@
+type frameStream {
+  ID: Int
+  URL: String
+  Position: String
+  AlgModel: Int
+  EncodeNeeded: Int
+}
+
 type Query {
-  frameStreams: [String!]!
+  frameStreams: [frameStream!]!
 }
 
 #type Mutation {
