@@ -1,12 +1,14 @@
 package main
 
 import (
+	_ "ColdMountain/conf"
+	_ "ColdMountain/connection"
 	"ColdMountain/graphql/adaptation"
 	"ColdMountain/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
-func main(){
+func main() {
 	r := gin.Default()
 	apiR := r.Group("/api")
 	{
