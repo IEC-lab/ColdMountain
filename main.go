@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ColdMountain/conf"
 	_ "ColdMountain/conf"
 	_ "ColdMountain/connection"
 	"ColdMountain/graphql/adaptation"
@@ -28,10 +29,11 @@ func getStructedMsgs(c *gin.Context) {
 	defer ws.Close()
 
 	// Kafka Consumer
+	coldQ := conf.GetGlobalConfig().ColdQ
 	config := sarama.NewConfig()
 	config.Consumer.Return.Errors = true
 	config.Version = sarama.V0_11_0_2
-	consumer, err := sarama.NewConsumer([]string{"192.168.1.4:9092"}, config)
+	consumer, err := sarama.NewConsumer([]string{coldQ.Address+":"+coldQ.Port}, config)
 	if err != nil {
 		fmt.Printf("consumer_test create consumer error %s\n", err.Error())
 		return

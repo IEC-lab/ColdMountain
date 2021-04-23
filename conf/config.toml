@@ -4,3 +4,7 @@ address = "coldrepo-service.coldworld"
 user = "root"
 password = "iamcold"
 port = "3306"
+
+[cold_q]
+address = "coldq-service.coldworld"
+port = "9092"

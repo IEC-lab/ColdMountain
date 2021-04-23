@@ -15,6 +15,7 @@ func init() {
 
 type Config struct {
 	ColdRepo ColdRepo `toml:"cold_repo"`
+	ColdQ    ColdQ    `toml:"cold_q"`
 }
 
 type ColdRepo struct {
@@ -22,6 +23,11 @@ type ColdRepo struct {
 	User     string
 	Password string
 	Port     string
+}
+
+type ColdQ struct {
+	Address string
+	Port    string
 }
 
 func GetGlobalConfig() *Config {
