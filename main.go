@@ -39,7 +39,7 @@ func getStructedMsgs(c *gin.Context) {
 		return
 	}
 	defer consumer.Close()
-	partitionConsumer, err := consumer.ConsumePartition("000", 0, sarama.OffsetNewest)
+	partitionConsumer, err := consumer.ConsumePartition("all_task", 0, sarama.OffsetNewest)
 	if err != nil {
 		fmt.Printf("try create partition_consumer error %s\n", err.Error())
 		return
