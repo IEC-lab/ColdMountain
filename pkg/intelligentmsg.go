@@ -40,19 +40,19 @@ func GetIntelligentMsgsFromDB(timeStampStart *string, timeStampEnd *string, vehi
 		}
 		whereStat += "ts <= '" + *timeStampEnd + "' "
 	}
-	if *vehicleLp != ""{
+	if *vehicleLp != "" {
 		if whereStat != "" {
 			whereStat += "and "
 		}
 		whereStat += "vehicle_lp = '" + *vehicleLp + "' "
 	}
-	if *vehicleColor != ""{
+	if *vehicleColor != "" {
 		if whereStat != "" {
 			whereStat += "and "
 		}
 		whereStat += "vehicle_color = '" + *vehicleColor + "' "
 	}
-	if *taskID != ""{
+	if *taskID != "" {
 		if whereStat != "" {
 			whereStat += "and "
 		}
