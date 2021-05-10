@@ -14,6 +14,10 @@ func (r *queryResolver) FrameStreams(ctx context.Context) ([]*model.FrameStream,
 	return pkg.DiscoverStreams(), nil
 }
 
+func (r *queryResolver) IntelligentMsgs(ctx context.Context, timeStampStart *string, timeStampEnd *string, vehicleLp *string, vehicleColor *string, taskID *string) ([]*model.IntelligentMsg, error) {
+	return pkg.GetIntelligentMsgs(timeStampStart, timeStampEnd, vehicleLp, vehicleColor, taskID), nil
+}
+
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 

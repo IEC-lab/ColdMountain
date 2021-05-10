@@ -9,3 +9,13 @@ type FrameStream struct {
 	AlgModel     *int    `json:"AlgModel"`
 	EncodeNeeded *int    `json:"EncodeNeeded"`
 }
+
+type IntelligentMsg struct {
+	ID            *int    `json:"ID"`
+	VehicleImgURL *string `json:"VehicleImgURL"`
+	VehicleLp     *string `json:"VehicleLP"`
+	VehicleType   *string `json:"VehicleType"`
+	VehicleColor  *string `json:"VehicleColor"`
+	TaskID        *string `json:"TaskID"`
+	TimeStamp     *string `json:"TimeStamp"`
+}

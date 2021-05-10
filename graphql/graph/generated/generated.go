@@ -43,7 +43,8 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Query struct {
-		FrameStreams func(childComplexity int) int
+		FrameStreams    func(childComplexity int) int
+		IntelligentMsgs func(childComplexity int, timeStampStart *string, timeStampEnd *string, vehicleLp *string, vehicleColor *string, taskID *string) int
 	}
 
 	FrameStream struct {
@@ -53,10 +54,21 @@ type ComplexityRoot struct {
 		Position     func(childComplexity int) int
 		URL          func(childComplexity int) int
 	}
+
+	IntelligentMsg struct {
+		ID            func(childComplexity int) int
+		TaskID        func(childComplexity int) int
+		TimeStamp     func(childComplexity int) int
+		VehicleColor  func(childComplexity int) int
+		VehicleImgURL func(childComplexity int) int
+		VehicleLp     func(childComplexity int) int
+		VehicleType   func(childComplexity int) int
+	}
 }
 
 type QueryResolver interface {
 	FrameStreams(ctx context.Context) ([]*model.FrameStream, error)
+	IntelligentMsgs(ctx context.Context, timeStampStart *string, timeStampEnd *string, vehicleLp *string, vehicleColor *string, taskID *string) ([]*model.IntelligentMsg, error)
 }
 
 type executableSchema struct {
@@ -80,6 +92,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.FrameStreams(childComplexity), true
+
+	case "Query.intelligentMsgs":
+		if e.complexity.Query.IntelligentMsgs == nil {
+			break
+		}
+
+		args, err := ec.field_Query_intelligentMsgs_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.IntelligentMsgs(childComplexity, args["TimeStampStart"].(*string), args["TimeStampEnd"].(*string), args["VehicleLP"].(*string), args["VehicleColor"].(*string), args["TaskID"].(*string)), true
 
 	case "frameStream.AlgModel":
 		if e.complexity.FrameStream.AlgModel == nil {
@@ -115,6 +139,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.FrameStream.URL(childComplexity), true
+
+	case "intelligentMsg.ID":
+		if e.complexity.IntelligentMsg.ID == nil {
+			break
+		}
+
+		return e.complexity.IntelligentMsg.ID(childComplexity), true
+
+	case "intelligentMsg.TaskID":
+		if e.complexity.IntelligentMsg.TaskID == nil {
+			break
+		}
+
+		return e.complexity.IntelligentMsg.TaskID(childComplexity), true
+
+	case "intelligentMsg.TimeStamp":
+		if e.complexity.IntelligentMsg.TimeStamp == nil {
+			break
+		}
+
+		return e.complexity.IntelligentMsg.TimeStamp(childComplexity), true
+
+	case "intelligentMsg.VehicleColor":
+		if e.complexity.IntelligentMsg.VehicleColor == nil {
+			break
+		}
+
+		return e.complexity.IntelligentMsg.VehicleColor(childComplexity), true
+
+	case "intelligentMsg.VehicleImgURL":
+		if e.complexity.IntelligentMsg.VehicleImgURL == nil {
+			break
+		}
+
+		return e.complexity.IntelligentMsg.VehicleImgURL(childComplexity), true
+
+	case "intelligentMsg.VehicleLP":
+		if e.complexity.IntelligentMsg.VehicleLp == nil {
+			break
+		}
+
+		return e.complexity.IntelligentMsg.VehicleLp(childComplexity), true
+
+	case "intelligentMsg.VehicleType":
+		if e.complexity.IntelligentMsg.VehicleType == nil {
+			break
+		}
+
+		return e.complexity.IntelligentMsg.VehicleType(childComplexity), true
 
 	}
 	return 0, false
@@ -174,8 +247,19 @@ var sources = []*ast.Source{
   EncodeNeeded: Int
 }
 
+type intelligentMsg {
+  ID: Int
+  VehicleImgURL: String
+  VehicleLP: String
+  VehicleType: String
+  VehicleColor: String
+  TaskID: String
+  TimeStamp: String
+}
+
 type Query {
   frameStreams: [frameStream!]!
+  intelligentMsgs(TimeStampStart: String, TimeStampEnd: String, VehicleLP: String, VehicleColor: String, TaskID: String): [intelligentMsg!]!
 }
 
 #type Mutation {
@@ -200,6 +284,57 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_intelligentMsgs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["TimeStampStart"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("TimeStampStart"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["TimeStampStart"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["TimeStampEnd"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("TimeStampEnd"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["TimeStampEnd"] = arg1
+	var arg2 *string
+	if tmp, ok := rawArgs["VehicleLP"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("VehicleLP"))
+		arg2, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["VehicleLP"] = arg2
+	var arg3 *string
+	if tmp, ok := rawArgs["VehicleColor"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("VehicleColor"))
+		arg3, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["VehicleColor"] = arg3
+	var arg4 *string
+	if tmp, ok := rawArgs["TaskID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("TaskID"))
+		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["TaskID"] = arg4
 	return args, nil
 }
 
@@ -274,6 +409,48 @@ func (ec *executionContext) _Query_frameStreams(ctx context.Context, field graph
 	res := resTmp.([]*model.FrameStream)
 	fc.Result = res
 	return ec.marshalNframeStream2ᚕᚖColdMountainᚋgraphqlᚋgraphᚋmodelᚐFrameStreamᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_intelligentMsgs(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_intelligentMsgs_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().IntelligentMsgs(rctx, args["TimeStampStart"].(*string), args["TimeStampEnd"].(*string), args["VehicleLP"].(*string), args["VehicleColor"].(*string), args["TaskID"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.IntelligentMsg)
+	fc.Result = res
+	return ec.marshalNintelligentMsg2ᚕᚖColdMountainᚋgraphqlᚋgraphᚋmodelᚐIntelligentMsgᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1590,6 +1767,230 @@ func (ec *executionContext) _frameStream_EncodeNeeded(ctx context.Context, field
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _intelligentMsg_ID(ctx context.Context, field graphql.CollectedField, obj *model.IntelligentMsg) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "intelligentMsg",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _intelligentMsg_VehicleImgURL(ctx context.Context, field graphql.CollectedField, obj *model.IntelligentMsg) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "intelligentMsg",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VehicleImgURL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _intelligentMsg_VehicleLP(ctx context.Context, field graphql.CollectedField, obj *model.IntelligentMsg) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "intelligentMsg",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VehicleLp, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _intelligentMsg_VehicleType(ctx context.Context, field graphql.CollectedField, obj *model.IntelligentMsg) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "intelligentMsg",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VehicleType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _intelligentMsg_VehicleColor(ctx context.Context, field graphql.CollectedField, obj *model.IntelligentMsg) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "intelligentMsg",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VehicleColor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _intelligentMsg_TaskID(ctx context.Context, field graphql.CollectedField, obj *model.IntelligentMsg) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "intelligentMsg",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TaskID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _intelligentMsg_TimeStamp(ctx context.Context, field graphql.CollectedField, obj *model.IntelligentMsg) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "intelligentMsg",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TimeStamp, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 // endregion **************************** field.gotpl *****************************
 
 // region    **************************** input.gotpl *****************************
@@ -1626,6 +2027,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_frameStreams(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "intelligentMsgs":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_intelligentMsgs(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -1908,6 +2323,42 @@ func (ec *executionContext) _frameStream(ctx context.Context, sel ast.SelectionS
 			out.Values[i] = ec._frameStream_AlgModel(ctx, field, obj)
 		case "EncodeNeeded":
 			out.Values[i] = ec._frameStream_EncodeNeeded(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var intelligentMsgImplementors = []string{"intelligentMsg"}
+
+func (ec *executionContext) _intelligentMsg(ctx context.Context, sel ast.SelectionSet, obj *model.IntelligentMsg) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, intelligentMsgImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("intelligentMsg")
+		case "ID":
+			out.Values[i] = ec._intelligentMsg_ID(ctx, field, obj)
+		case "VehicleImgURL":
+			out.Values[i] = ec._intelligentMsg_VehicleImgURL(ctx, field, obj)
+		case "VehicleLP":
+			out.Values[i] = ec._intelligentMsg_VehicleLP(ctx, field, obj)
+		case "VehicleType":
+			out.Values[i] = ec._intelligentMsg_VehicleType(ctx, field, obj)
+		case "VehicleColor":
+			out.Values[i] = ec._intelligentMsg_VehicleColor(ctx, field, obj)
+		case "TaskID":
+			out.Values[i] = ec._intelligentMsg_TaskID(ctx, field, obj)
+		case "TimeStamp":
+			out.Values[i] = ec._intelligentMsg_TimeStamp(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2227,6 +2678,53 @@ func (ec *executionContext) marshalNframeStream2ᚖColdMountainᚋgraphqlᚋgrap
 		return graphql.Null
 	}
 	return ec._frameStream(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNintelligentMsg2ᚕᚖColdMountainᚋgraphqlᚋgraphᚋmodelᚐIntelligentMsgᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.IntelligentMsg) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNintelligentMsg2ᚖColdMountainᚋgraphqlᚋgraphᚋmodelᚐIntelligentMsg(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNintelligentMsg2ᚖColdMountainᚋgraphqlᚋgraphᚋmodelᚐIntelligentMsg(ctx context.Context, sel ast.SelectionSet, v *model.IntelligentMsg) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._intelligentMsg(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

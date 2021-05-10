@@ -6,8 +6,19 @@ type frameStream {
   EncodeNeeded: Int
 }
 
+type intelligentMsg {
+  ID: Int
+  VehicleImgURL: String
+  VehicleLP: String
+  VehicleType: String
+  VehicleColor: String
+  TaskID: String
+  TimeStamp: String
+}
+
 type Query {
   frameStreams: [frameStream!]!
+    intelligentMsgs(TimeStampStart: String, TimeStampEnd: String, VehicleLP: String, VehicleColor: String, TaskID: String): [intelligentMsg!]!
 }
 
 #type Mutation {
