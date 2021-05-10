@@ -1,11 +1,11 @@
 package model
 
 type RTSPResource struct {
-	ID           int    `gorm:"id"`
-	URL          string `gorm:"url"`
-	Position     string `gorm:"position"`
-	AlgModel     int    `gorm:"model"`
-	EncodeNeeded int    `gorm:"encodeneeded"`
+	ID           int    `gorm:"column:id"`
+	URL          string `gorm:"column:url"`
+	Position     string `gorm:"column:position"`
+	AlgModel     int    `gorm:"column:model"`
+	EncodeNeeded int    `gorm:"column:encodeneeded"`
 }
 
 func (r RTSPResource) TableName() string {

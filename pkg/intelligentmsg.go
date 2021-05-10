@@ -5,6 +5,7 @@ import (
 	model2 "ColdMountain/graphql/graph/model"
 	"ColdMountain/model"
 	"log"
+	"time"
 )
 
 func GetIntelligentMsgs(timeStampStart *string, timeStampEnd *string, vehicleLp *string, vehicleColor *string, taskID *string) []*model2.IntelligentMsg {
@@ -13,6 +14,7 @@ func GetIntelligentMsgs(timeStampStart *string, timeStampEnd *string, vehicleLp 
 	} else {
 		var ret = make([]*model2.IntelligentMsg, len(intelligentMsgs))
 		for i := 0; i < len(intelligentMsgs); i++ {
+			ts := time.Unix(intelligentMsgs[i].TimeStamp.Unix(), 0).Format("2006-01-02 15:04:05")
 			ret[i] = &model2.IntelligentMsg{
 				ID:            &intelligentMsgs[i].ID,
 				VehicleImgURL: &intelligentMsgs[i].VehicleImgURL,
@@ -20,7 +22,7 @@ func GetIntelligentMsgs(timeStampStart *string, timeStampEnd *string, vehicleLp 
 				VehicleType:   &intelligentMsgs[i].VehicleType,
 				VehicleColor:  &intelligentMsgs[i].VehicleColor,
 				TaskID:        &intelligentMsgs[i].TaskID,
-				TimeStamp:     &intelligentMsgs[i].TimeStamp,
+				TimeStamp:     &ts,
 			}
 		}
 		return ret
