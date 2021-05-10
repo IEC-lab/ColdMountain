@@ -58,7 +58,7 @@ func GetIntelligentMsgsFromDB(timeStampStart *string, timeStampEnd *string, vehi
 		}
 		whereStat += "task_id = '" + *taskID + "' "
 	}
-	if dbErr := cl.Where(whereStat).Find(&intelligentMsgs).Error; dbErr != nil {
+	if dbErr := cl.Where(whereStat).Order("ts ASC").Find(&intelligentMsgs).Error; dbErr != nil {
 		log.Printf("dberr: %+v", dbErr)
 		return nil, dbErr
 	}
